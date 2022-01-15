@@ -18,4 +18,12 @@ Se agregan los presets en el archivo .babelrc
 "plugins": ["@babel/transform-runtime"]
 }
 
+Para empezar los tests:
+All of the Jest functions are already required and available in the global
+namespace when you run the npm test command. You don't need to
+import anything.
 
+Remember our principle: always implement the simplest thing that will possibly work.
+That includes hard-coding, when it's possible. In order to get to the real implementation,
+we need to add more tests. This process is called triangulation. The more specific our tests
+get, the more general our production code needs to get.
