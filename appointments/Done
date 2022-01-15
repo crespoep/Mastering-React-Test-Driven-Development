@@ -1,4 +1,21 @@
 Capitulo 1: 
 npm init, para crear iniciar
-npm install --save-dev jest, para instalar Jest
+
+Instalar Jest:
+$ npm install --save-dev jest
+
+Instalar React: 
+$ npm install --save react react-dom
+
+React usa JSX, y necesitamos Babel para transpilarlo, pero Jest ya lo incluye asi que solo se necesitan algunos presets y plugins:
+npm install --save-dev @babel/preset-env @babel/preset-react
+npm install --save-dev @babel/plugin-transform-runtime
+npm install --save @babel/runtime
+
+Se agregan los presets en el archivo .babelrc
+{
+"presets": ["@babel/env", "@babel/react"],
+"plugins": ["@babel/transform-runtime"]
+}
+
 
