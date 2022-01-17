@@ -32,3 +32,9 @@ The parts of a test that you want to see are the parts that differ between
 tests. Usually, some data remains the same ( container in this example)
 and some differs ( customer in this example). Do your best to hide away
 whatever is the same and proudly display what differs.
+
+In the test, the today constant is defined to be new Date() . Each of the two
+records then uses this as a kind of "base" date to work its own time off.
+Whenever we're dealing with dates, it's important that we base all events on
+the same moment in time, rather than asking the system for the current time
+more than once. Doing that is a subtle bug waiting to happen.
