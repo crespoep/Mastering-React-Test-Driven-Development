@@ -38,3 +38,13 @@ records then uses this as a kind of "base" date to work its own time off.
 Whenever we're dealing with dates, it's important that we base all events on
 the same moment in time, rather than asking the system for the current time
 more than once. Doing that is a subtle bug waiting to happen.
+
+React components respond to what it calls synthetic events. React uses
+these to mask browser discrepancies in the DOM event model. That
+means we can't raise standard events that we'd fire through JSDOM.
+Instead, we use the ReactTestUtils.Simulate object to raise events.
+
+At this stage, I'm not too bothered about where the customer name
+appears on screen. Testing container.textContent is like saying I want
+this text to appear somewhere, but I don't care where. Later on, we'll see
+techniques for expecting text in specific places.
