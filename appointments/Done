@@ -27,3 +27,8 @@ Remember our principle: always implement the simplest thing that will possibly w
 That includes hard-coding, when it's possible. In order to get to the real implementation,
 we need to add more tests. This process is called triangulation. The more specific our tests
 get, the more general our production code needs to get.
+
+The parts of a test that you want to see are the parts that differ between
+tests. Usually, some data remains the same ( container in this example)
+and some differs ( customer in this example). Do your best to hide away
+whatever is the same and proudly display what differs.
