@@ -48,3 +48,7 @@ At this stage, I'm not too bothered about where the customer name
 appears on screen. Testing container.textContent is like saying I want
 this text to appear somewhere, but I don't care where. Later on, we'll see
 techniques for expecting text in specific places.
+
+Jest includes Babel, which transpiles all our code when it's run in the test environment. But
+what about when we're serving our code via our website? Jest won't be able to help us
+there.
