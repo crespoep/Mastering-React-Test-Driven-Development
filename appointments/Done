@@ -52,3 +52,8 @@ techniques for expecting text in specific places.
 Jest includes Babel, which transpiles all our code when it's run in the test environment. But
 what about when we're serving our code via our website? Jest won't be able to help us
 there.
+
+We've given this form an ID and that our test looks specifically for that ID
+in its expectation. This protects us from brittle tests. For example, if our
+test just looked for any form, then it could break if we design our page to
+include two forms rather than just this one.
