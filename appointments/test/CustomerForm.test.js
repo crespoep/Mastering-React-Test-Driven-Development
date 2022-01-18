@@ -53,7 +53,7 @@ describe('CustomerForm', () => {
     expect(firstNameField().id).toEqual(labelFor('firstName').htmlFor)
   })
 
-  it('saves existing first namewhen submitted', async () => {
+  it('saves existing first name when submitted', () => {
     expect.hasAssertions()
     render(
       <CustomerForm
@@ -63,6 +63,22 @@ describe('CustomerForm', () => {
         }
       />
     )
-    await ReactTestUtils.Simulate.submit(form('customer'))
+    ReactTestUtils.Simulate.submit(form('customer'))
+  })
+
+  it('saves new first name when submitted', () => {
+    expect.hasAssertions()
+    render(
+      <CustomerForm
+        firstName="Ashley"
+        onSubmit={({firstName}) => 
+          expect(firstName).toEqual('Jamie')
+      }
+      />
+    )
+    ReactTestUtils.Simulate.change(firstNameField(), {
+      target: {value: 'Jamie'}
+    })
+    ReactTestUtils.Simulate.submit(form('customer'))
   })
 })
