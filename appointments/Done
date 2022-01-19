@@ -57,3 +57,28 @@ We've given this form an ID and that our test looks specifically for that ID
 in its expectation. This protects us from brittle tests. For example, if our
 test just looked for any form, then it could break if we design our page to
 include two forms rather than just this one.
+
+TIP:
+Al hacer un map de una variable que no le pasé, por ej selectableServices o customer, tira error de undefined
+
+TIP:
+cuando quiere buscar un elemento en el DOM con un selector y no existe, tira null
+cuando busca un elemento dentro de un form con .elements y no existe, tira undefined, de ahí varía usar toBeNull() o toBeUndefined()
+
+it('pre-selects the existing value', () => {
+  const services = ['Cut', 'Blow-dry']
+  render(
+    <AppointmentForm
+      selectableServices={services}
+      service="Blow-dry"
+    />
+  )
+  const option = findOption(
+    field('service'),
+    'Blow-dry'
+  )
+  expect(option.selected).toBeTruthy()
+  // It could be also:
+  // expect(field('service').value).toEqual('Blow-dry')
+  // It seems more straightforward to me
+})
