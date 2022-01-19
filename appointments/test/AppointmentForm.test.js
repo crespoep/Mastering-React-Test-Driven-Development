@@ -32,50 +32,60 @@ describe('AppointmentForm', () => {
       expect(field('service')).not.toBeUndefined()
       expect(field('service').tagName).toEqual('SELECT')
     })
-  })
-
-  it('initially has a blank value chosen', () => {
-    render(<AppointmentForm />)
-    const firstNode = field('service').childNodes[0]
-    expect(firstNode.value).toEqual('')
-    expect(firstNode.selected).toBeTruthy()
-  })
+    it('initially has a blank value chosen', () => {
+      render(<AppointmentForm />)
+      const firstNode = field('service').childNodes[0]
+      expect(firstNode.value).toEqual('')
+      expect(firstNode.selected).toBeTruthy()
+    })
+    
+    it('lists all salon services', () => {
+      const selectableServices = [
+        'Cut',
+        'Blow-dry'
+      ]
+      render(
+        <AppointmentForm
+          selectableServices={selectableServices}
+        />
+      )
+      const optionNodes = Array.from(
+        field('service').childNodes
+      ) 
+      const renderedServices = optionNodes.map(
+        node => node.textContent
+      )
+      expect(renderedServices).toEqual(
+        expect.arrayContaining(selectableServices)
+      )
+    })
   
-  it('lists all salon services', () => {
-    const selectableServices = [
-      'Cut',
-      'Blow-dry'
-    ]
-    render(
-      <AppointmentForm
-        selectableServices={selectableServices}
-      />
-    )
-    const optionNodes = Array.from(
-      field('service').childNodes
-    ) 
-    const renderedServices = optionNodes.map(
-      node => node.textContent
-    )
-    expect(renderedServices).toEqual(
-      expect.arrayContaining(selectableServices)
-    )
-  })
+    it('pre-selects the existing value', () => {
+      const services = ['Cut', 'Blow-dry']
+      render(
+        <AppointmentForm
+          selectableServices={services}
+          service="Blow-dry"
+        />
+      )
+      const option = findOption(
+        field('service'),
+        'Blow-dry'
+      )
+      expect(option.selected).toBeTruthy()
+    })
 
-  it('pre-selects the existing value', () => {
-    const services = ['Cut', 'Blow-dry']
-    render(
-      <AppointmentForm
-        selectableServices={services}
-        service="Blow-dry"
-      />
-    )
-    const option = findOption(
-      field('service'),
-      'Blow-dry'
-    )
-    expect(option.selected).toBeTruthy()
-  })
+    it('renders a label', () => {
+      render(<AppointmentForm />)
+      const label = container.querySelector('label[for="service"]')
+      expect(label).not.toBeNull()
+      expect(label.textContent).toEqual('Salon service')
+    })
 
-  
+    it('assigns an id that matches the label for', () => {
+      render(<AppointmentForm />)
+      expect(field('service').id).toEqual('service')
+    })
+
+  })
 })
