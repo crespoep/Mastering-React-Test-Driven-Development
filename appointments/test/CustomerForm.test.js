@@ -38,7 +38,7 @@ describe('CustomerForm', () => {
     it('includes the existing value', () => {
       //value could be Ashley too
       render(<CustomerForm {...{[fieldName]: 'value'}} />)
-      expect(field('firstName').value).toEqual('value')
+      expect(field(fieldName).value).toEqual('value')
     })
   } 
 
@@ -106,5 +106,13 @@ describe('CustomerForm', () => {
     itAssignsAnIdThatMatchesTheLabelId('firstName')
     itSavesExistingValueWhenSubmitted('firstName', 'Ashley')
     itSavesNewValueWhenSubmitted('firstName', 'Jamie')
+  })
+
+  describe('last name field', () => {
+    itRendersAsATextBox('lastName')
+    itIncludesTheExistingValue('lastName')
+    itRendersALabel('lastName', 'Last name')
+    itAssignsAnId('lastName')
+    itAssignsAnIdThatMatchesTheLabelId('lastName')
   })
 })
