@@ -91,7 +91,7 @@ describe('CustomerForm', () => {
         }
         />
       )
-      ReactTestUtils.Simulate.change(field('firstName'), {
+      ReactTestUtils.Simulate.change(field(fieldName), {
         target: {value: newValue}
       })
       ReactTestUtils.Simulate.submit(form('customer'))
@@ -114,5 +114,17 @@ describe('CustomerForm', () => {
     itRendersALabel('lastName', 'Last name')
     itAssignsAnId('lastName')
     itAssignsAnIdThatMatchesTheLabelId('lastName')
+    itSavesExistingValueWhenSubmitted('lastName', 'Ashley')
+    itSavesNewValueWhenSubmitted('lastName', 'Jamie')
+  })
+
+  describe('phoneNumber', () => {
+    itRendersAsATextBox('phoneNumber')
+    itIncludesTheExistingValue('phoneNumber')
+    itRendersALabel('phoneNumber', 'Phone number')
+    itAssignsAnId('phoneNumber')
+    itAssignsAnIdThatMatchesTheLabelId('phoneNumber')
+    itSavesExistingValueWhenSubmitted('phoneNumber', '12345')
+    itSavesNewValueWhenSubmitted('phoneNumber', '12345')
   })
 })
