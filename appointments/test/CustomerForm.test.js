@@ -98,6 +98,15 @@ describe('CustomerForm', () => {
     })
   }
 
+  it('has a submit button', () => {
+    render(<CustomerForm />)
+    const submitButton = container.querySelector(
+      'input[type="submit"]'
+    )
+    expect(submitButton).not.toBeNull
+    expect(submitButton.value).toEqual('Add')
+  })
+
   describe('first name field', () => {
     itRendersAsATextBox('firstName')
     itIncludesTheExistingValue('firstName')
