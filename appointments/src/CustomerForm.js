@@ -8,19 +8,9 @@ export const CustomerForm = ({
 }) => {
   const [customer, setCustomer] = useState({firstName, lastName, phoneNumber})
  
-  const handleChangeFirstName = ({target}) => setCustomer(customer => ({
+  const handleChange = ({target}) => setCustomer(customer => ({
     ...customer,
-    firstName: target.value
-  }))
-
-  const handleChangeLastName = ({target}) => setCustomer(customer => ({
-    ...customer,
-    lastName: target.value
-  }))
-
-  const handleChangePhoneNumber = ({target}) => setCustomer(customer => ({
-    ...customer,
-    phoneNumber: target.value
+    [target.name]: target.value
   }))
 
   return (
@@ -31,7 +21,7 @@ export const CustomerForm = ({
           type="text"
           name="firstName"
           value={firstName}
-          onChange={handleChangeFirstName}
+          onChange={handleChange}
       />
       <label htmlFor="lastName">Last name</label>
       <input
@@ -39,7 +29,7 @@ export const CustomerForm = ({
           type="text"
           name="lastName"
           value={lastName}
-          onChange={handleChangeLastName}
+          onChange={handleChange}
       />
       <label htmlFor="phoneNumber">Phone number</label>
       <input
@@ -47,7 +37,7 @@ export const CustomerForm = ({
           type="text"
           name="phoneNumber"
           value={phoneNumber}
-          onChange={handleChangePhoneNumber}
+          onChange={handleChange}
       />
     </form>
   )
