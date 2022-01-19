@@ -1,7 +1,7 @@
 import React from "react"
 import { AppointmentForm } from "../src/AppointmentForm"
 import { createContainer } from "./domManipulators"
-
+import ReactTestUtils from 'react-dom/test-utils'
 
 describe('AppointmentForm', () => {
   let render, container
@@ -87,5 +87,20 @@ describe('AppointmentForm', () => {
       expect(field('service').id).toEqual('service')
     })
 
+    it('saves existing value when submitted', () => {
+      expect.hasAssertions()
+      render(
+      <AppointmentForm 
+        service={'Cut'}
+        onSubmit={
+          ({service}) => {
+            expect(service).toEqual('Cut')
+          }
+        }
+      />
+      )
+      const form = container.querySelector('form[id="appointment"]')
+      ReactTestUtils.Simulate.submit(form)
+    })
   })
 })
