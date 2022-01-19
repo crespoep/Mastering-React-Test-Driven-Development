@@ -27,16 +27,25 @@ describe('CustomerForm', () => {
     expect(form('customer')).not.toBeNull()
   })
 
-  describe('first name field', () => {
+  const itRendersAsATextBox = (fieldName) => {
     it('renders as text box', () => {
       render(<CustomerForm />)
-      expectToBeInputFieldOfTypeText(field('firstName'))
+      expectToBeInputFieldOfTypeText(field(fieldName))
     })
+  }
 
+  const itIncludesTheExistingValue = (fieldName) => {
     it('includes the existing value', () => {
-      render(<CustomerForm firstName="Ashley" />)
-      expect(field('firstName').value).toEqual('Ashley')
+      //value could be Ashley too
+      render(<CustomerForm {...{[fieldName]: 'value'}} />)
+      expect(field('firstName').value).toEqual('value')
     })
+  } 
+
+  describe('first name field', () => {
+    itRendersAsATextBox('firstName')
+    itIncludesTheExistingValue('firstName')
+
 
     it('renders a label', () => {
       render(<CustomerForm />)
