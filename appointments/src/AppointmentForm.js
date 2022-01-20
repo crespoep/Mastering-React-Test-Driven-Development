@@ -1,5 +1,44 @@
 import React, { useState } from "react"
 
+const timeIncrements = (numTimes, startTime, increment) => 
+  Array(numTimes)
+    .fill([startTime])
+    .reduce((acc, _, i) => acc.concat([startTime + (i * increment)]))
+
+const dailyTimeSlots = (salonOpensAt, salonClosesAt) => {
+  const totalSlots = (salonClosesAt - salonOpensAt) * 2
+  const startTime = new Date().setHours(salonOpensAt, 0, 0, 0)
+  // converts 30 minutes to miliseconds
+  const increment = 30 * 60 * 1000
+  return timeIncrements(totalSlots, startTime, increment)
+}
+
+const weeklyDateValues = startDate => {
+  const midnight = new Date(startDate).setHours(0, 0, 0, 0)
+  const increment = 24 * 60 * 60 * 1000
+  return timeIncrements(7, midnight, increment)
+}
+
+const toShortDate = timestamp => {
+  const [day, , dayOfMonth] = new Date(timestamp)
+    .toDateString()
+    .split(' ')
+  return `${day} ${dayOfMonth}`
+}
+
+const toTimeValue = timestamp => 
+  new Date(timestamp).toTimeString().substring(0, 5)
+
+const mergeDateAndTime = (date, timeSlot) => {
+  const time = new Date(timeSlot)
+  return new Date(date).setHours(
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds()
+  )
+}
+
 export const AppointmentForm = ({
   selectableServices,
   service,
@@ -7,7 +46,8 @@ export const AppointmentForm = ({
   salonOpensAt,
   salonClosesAt,
   today,
-  availableTimeSlots
+  availableTimeSlots,
+  startsAt
 }) => {
 
   const [appointment, setAppointment] = useState({service})
@@ -35,54 +75,15 @@ export const AppointmentForm = ({
             s => <option key={s}>{s}</option>
           )
         }
-
       </select>
       <TimeSlotTable 
         salonOpensAt={salonOpensAt}
         salonClosesAt={salonClosesAt}
         today={today}
         availableTimeSlots={availableTimeSlots}
+        startsAt={startsAt}
       />
     </form>
-  )
-}
-
-const dailyTimeSlots = (salonOpensAt, salonClosesAt) => {
-  const totalSlots = (salonClosesAt - salonOpensAt) * 2
-  const startTime = new Date().setHours(salonOpensAt, 0, 0, 0)
-  // converts 30 minutes to miliseconds
-  const increment = 30 * 60 * 1000
-  return timeIncrements(totalSlots, startTime, increment)
-  }
-
-const toTimeValue = timestamp => 
-  new Date(timestamp).toTimeString().substring(0, 5)
-
-const weeklyDateValues = startDate => {
-  const midnight = new Date(startDate).setHours(0, 0, 0, 0)
-  const increment = 24 * 60 * 60 * 1000
-  return timeIncrements(7, midnight, increment)
-}
-
-const timeIncrements = (numTimes, startTime, increment) => 
-  Array(numTimes)
-    .fill([startTime])
-    .reduce((acc, _, i) => acc.concat([startTime + (i * increment)]))
-
-const toShortDate = timestamp => {
-  const [day, , dayOfMonth] = new Date(timestamp)
-    .toDateString()
-    .split(' ')
-  return `${day} ${dayOfMonth}`
-}
-
-const mergeDateAndTime = (date, timeSlot) => {
-  const time = new Date(timeSlot)
-  return new Date(date).setHours(
-    time.getHours(),
-    time.getMinutes(),
-    time.getSeconds(),
-    time.getMilliseconds()
   )
 }
 
@@ -90,10 +91,10 @@ const TimeSlotTable = ({
   salonOpensAt,
   salonClosesAt,
   today,
-  availableTimeSlots
+  availableTimeSlots,
+  startsAt
 }) => {
   const timeSlots = dailyTimeSlots(salonOpensAt, salonClosesAt)
-  
   const days = weeklyDateValues(today)
 
   return (
@@ -118,6 +119,7 @@ const TimeSlotTable = ({
                       availableTimeSlots={availableTimeSlots}
                       date={date}
                       timeSlot={timeSlot}
+                      checkedTimeSlot={startsAt}
                     />
                   </td>
                 ))
@@ -133,9 +135,13 @@ const TimeSlotTable = ({
 const RadioButtonIfAvailable = ({
   availableTimeSlots,
   date,
-  timeSlot
+  timeSlot,
+  checkedTimeSlot
 }) => {
   const startsAt = mergeDateAndTime(date, timeSlot)
+
+  //startsAt is the current selected value
+  const isChecked = startsAt === checkedTimeSlot
 
   if (
     availableTimeSlots.some(availableTimeSlot => availableTimeSlot.startsAt === startsAt)
@@ -145,6 +151,8 @@ const RadioButtonIfAvailable = ({
         name="startsAt"
         type="radio"
         value={startsAt}
+        checked={isChecked}
+        readOnly
       />
     )
   }
