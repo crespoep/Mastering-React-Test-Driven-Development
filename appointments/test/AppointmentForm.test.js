@@ -124,5 +124,10 @@ describe('AppointmentForm', () => {
       expect(timesOfDay[3].textContent).toEqual('10:30')
     })
 
+    it('renders an empty cell at the start of the header row', () => {
+      render(<AppointmentForm />)
+      const headerRow = timeSlotTable().querySelector('thead > tr')
+      expect(headerRow.firstChild.textContent).toEqual('')
+    })
   })
 })

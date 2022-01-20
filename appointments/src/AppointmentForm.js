@@ -65,6 +65,11 @@ const TimeSlotTable = ({
   
   return (
     <table id="time-slots">
+      <thead>
+        <tr>
+          <th></th>
+        </tr>
+      </thead>
       <tbody>
         {
           timeSlots.map(timeSlot => 
