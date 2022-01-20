@@ -29,9 +29,12 @@ export const AppointmentForm = ({selectableServices, service, onSubmit}) => {
         }
 
       </select>
+      <TimeSlotTable />
     </form>
   )
 }
+
+const TimeSlotTable = () => <table id="time-slots"></table>
 
 AppointmentForm.defaultProps = {
   selectableServices: [
