@@ -6,7 +6,8 @@ export const AppointmentForm = ({
   onSubmit,
   salonOpensAt,
   salonClosesAt,
-  today
+  today,
+  availableTimeSlots
 }) => {
 
   const [appointment, setAppointment] = useState({service})
@@ -40,6 +41,7 @@ export const AppointmentForm = ({
         salonOpensAt={salonOpensAt}
         salonClosesAt={salonClosesAt}
         today={today}
+        availableTimeSlots={availableTimeSlots}
       />
     </form>
   )
@@ -74,10 +76,21 @@ const toShortDate = timestamp => {
   return `${day} ${dayOfMonth}`
 }
 
+const mergeDateAndTime = (date, timeSlot) => {
+  const time = new Date(timeSlot)
+  return new Date(date).setHours(
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds()
+  )
+}
+
 const TimeSlotTable = ({
   salonOpensAt,
   salonClosesAt,
-  today
+  today,
+  availableTimeSlots
 }) => {
   const timeSlots = dailyTimeSlots(salonOpensAt, salonClosesAt)
   
@@ -98,6 +111,19 @@ const TimeSlotTable = ({
           timeSlots.map(timeSlot => 
             <tr key={timeSlot}>
               <th>{toTimeValue(timeSlot)}</th>
+              {
+                days.map(date => (
+                  <td key={date}>
+                    {
+                      availableTimeSlots.some(availableTimeSlot => 
+                        availableTimeSlot.startsAt === mergeDateAndTime(date, timeSlot)
+                      ) 
+                      ? <input type="radio" />
+                      : null
+                    }
+                  </td>
+                ))
+              }
             </tr>
           )
         }
@@ -117,5 +143,6 @@ AppointmentForm.defaultProps = {
   ],
   salonOpensAt: 9,
   salonClosesAt: 19,
-  today: new Date()
+  today: new Date(),
+  availableTimeSlots: []
 }
