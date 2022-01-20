@@ -104,14 +104,25 @@ describe('AppointmentForm', () => {
     })
   })
 
+  const timeSlotTable = () => container.querySelector('table#time-slots')
+
   describe('time slot table', () => {
     it('renders a table for time slots', () => {
       render(<AppointmentForm />)
-      expect(
-        container.querySelector('table#time-slots')
-      ).not.toBeNull()
+      expect(timeSlotTable()).not.toBeNull()
+    })
+    it('renders a time slot for every half an hour between open and cloase times', () => { 
+      render(
+        <AppointmentForm salonOpensAt={9} salonClosesAt={11} />
+      )
+      const timesOfDay = timeSlotTable().querySelectorAll(
+        'tbody >* th'
+      )
+      expect(timesOfDay).toHaveLength(4)
+      expect(timesOfDay[0].textContent).toEqual('09:00')
+      expect(timesOfDay[1].textContent).toEqual('09:30')
+      expect(timesOfDay[3].textContent).toEqual('10:30')
     })
 
-    
   })
 })
