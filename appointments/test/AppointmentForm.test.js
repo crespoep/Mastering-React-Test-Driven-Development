@@ -129,5 +129,17 @@ describe('AppointmentForm', () => {
       const headerRow = timeSlotTable().querySelector('thead > tr')
       expect(headerRow.firstChild.textContent).toEqual('')
     })
+
+    it('renders a week of available dates', () => {
+      const today = new Date(2018, 11, 1)
+      render(<AppointmentForm today={today} />)
+      const dates = timeSlotTable().querySelectorAll(
+        'thead >* th:not(:first-child)'
+      )
+      expect(dates).toHaveLength(7)
+      expect(dates[0].textContent).toEqual('Sat 01')
+      expect(dates[1].textContent).toEqual('Sun 02')
+      expect(dates[6].textContent).toEqual('Fri 07')
+    })
   })
 })
