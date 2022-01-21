@@ -50,7 +50,7 @@ export const AppointmentForm = ({
   startsAt
 }) => {
 
-  const [appointment, setAppointment] = useState({service})
+  const [appointment, setAppointment] = useState({service, startsAt})
 
   const handleChangeService = ({target}) => {
     setAppointment((appointment) => ({
