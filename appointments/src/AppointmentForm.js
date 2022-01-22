@@ -121,7 +121,9 @@ export const AppointmentForm = ({
   salonClosesAt,
   today,
   availableTimeSlots,
-  startsAt
+  startsAt,
+  selectableStylists,
+  stylist
 }) => {
 
   const [appointment, setAppointment] = useState({service, startsAt})
@@ -158,6 +160,19 @@ export const AppointmentForm = ({
           )
         }
       </select>
+      <label htmlFor="stylist">Stylist</label>
+      <select 
+        id="stylist"
+        value={stylist}
+        readOnly
+      >
+        <option />
+        {
+          selectableStylists.map(stylist => 
+            <option key={stylist}>{stylist}</option>
+          )
+        }
+      </select>
       <TimeSlotTable 
         salonOpensAt={salonOpensAt}
         salonClosesAt={salonClosesAt}
@@ -183,5 +198,6 @@ AppointmentForm.defaultProps = {
   salonOpensAt: 9,
   salonClosesAt: 19,
   today: new Date(),
-  availableTimeSlots: []
+  availableTimeSlots: [],
+  selectableStylists: []
 }

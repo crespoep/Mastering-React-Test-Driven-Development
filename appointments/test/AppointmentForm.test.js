@@ -120,6 +120,61 @@ describe('AppointmentForm', () => {
       index
     ]
 
+  describe('stylist field', () => {
+    it('renders a select box', () => {
+      render(<AppointmentForm />)
+      expect(field('stylist')).not.toBeUndefined()
+      expect(field('stylist').tagName).toEqual('SELECT')   
+    })
+
+    it('initially has a blank value chosen', () => {
+      render(<AppointmentForm />)
+      const firstNode = field('stylist').childNodes[0]
+      expect(firstNode).not.toBeUndefined()
+      expect(firstNode.textContent).toEqual('')
+      expect(firstNode.selected).toBeTruthy()
+    })
+
+    it('renders the list of stylists passed to it', () => {
+      const stylists = [
+        'John',
+        'Richard',
+        'Daniel'
+      ]
+      render(<AppointmentForm selectableStylists={stylists} />)
+      const childNodes = field('stylist').childNodes
+      const optionNodes = Array.from(childNodes)
+      const listOfStylists = optionNodes.map(
+        option => option.textContent        
+      )
+      expect(listOfStylists).toEqual(
+        expect.arrayContaining(stylists)
+      )
+    })
+
+    it('pre-selects existing value', () => {
+      const selectableStylists = [
+        'John',
+        'Richard',
+        'Daniel'
+      ]
+      render(
+        <AppointmentForm 
+          stylist={"Richard"} 
+          selectableStylists={selectableStylists} 
+        />
+      )
+      expect(field('stylist').value).toEqual('Richard')
+    })
+
+    it('renders a label', () => {
+      render(<AppointmentForm />)
+      const stylistLabel = container.querySelector('label[for="stylist"]')
+      expect(stylistLabel).not.toBeNull()
+      expect(stylistLabel.textContent).toEqual('Stylist')
+    })
+  })
+
   describe('time slot table', () => {
     it('renders a table for time slots', () => {
       render(<AppointmentForm />)
