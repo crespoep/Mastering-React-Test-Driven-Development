@@ -39,6 +39,80 @@ const mergeDateAndTime = (date, timeSlot) => {
   )
 }
 
+const RadioButtonIfAvailable = ({
+  availableTimeSlots,
+  date,
+  timeSlot,
+  checkedTimeSlot,
+  handleChange
+}) => {
+  const startsAt = mergeDateAndTime(date, timeSlot)
+
+  if (
+    availableTimeSlots.some(availableTimeSlot => availableTimeSlot.startsAt === startsAt)
+  ) {
+    //startsAt is the current selected value
+    const isChecked = startsAt === checkedTimeSlot;
+    return (
+      <input 
+        name="startsAt"
+        type="radio"
+        value={startsAt}
+        checked={isChecked}
+        onChange={handleChange}
+      />
+    )
+  }
+  return null
+}
+
+const TimeSlotTable = ({
+  salonOpensAt,
+  salonClosesAt,
+  today,
+  availableTimeSlots,
+  checkedTimeSlot,
+  handleChange
+}) => {
+  const timeSlots = dailyTimeSlots(salonOpensAt, salonClosesAt)
+  const days = weeklyDateValues(today)
+
+  return (
+    <table id="time-slots">
+      <thead>
+        <tr>
+          <th />
+          {
+            days.map(day => <th key={day}>{toShortDate(day)}</th>)
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          timeSlots.map(timeSlot => 
+            <tr key={timeSlot}>
+              <th>{toTimeValue(timeSlot)}</th>
+              {
+                days.map(date => (
+                  <td key={date}>
+                    <RadioButtonIfAvailable 
+                      availableTimeSlots={availableTimeSlots}
+                      date={date}
+                      timeSlot={timeSlot}
+                      checkedTimeSlot={checkedTimeSlot}
+                      handleChange={handleChange}
+                    />
+                  </td>
+                ))
+              }
+            </tr>
+          )
+        }
+      </tbody>
+    </table>
+  )
+}
+
 export const AppointmentForm = ({
   selectableServices,
   service,
@@ -89,87 +163,12 @@ export const AppointmentForm = ({
         salonClosesAt={salonClosesAt}
         today={today}
         availableTimeSlots={availableTimeSlots}
-        startsAt={startsAt}
+        checkedTimeSlot={appointment.startsAt}
         handleChange={handleStartsAtChange}
       />
       <input type="submit" value="Add" />
     </form>
   )
-}
-
-const TimeSlotTable = ({
-  salonOpensAt,
-  salonClosesAt,
-  today,
-  availableTimeSlots,
-  startsAt,
-  handleChange
-}) => {
-  const timeSlots = dailyTimeSlots(salonOpensAt, salonClosesAt)
-  const days = weeklyDateValues(today)
-
-  return (
-    <table id="time-slots">
-      <thead>
-        <tr>
-          <th />
-          {
-            days.map(day => <th key={day}>{toShortDate(day)}</th>)
-          }
-        </tr>
-      </thead>
-      <tbody>
-        {
-          timeSlots.map(timeSlot => 
-            <tr key={timeSlot}>
-              <th>{toTimeValue(timeSlot)}</th>
-              {
-                days.map(date => (
-                  <td key={date}>
-                    <RadioButtonIfAvailable 
-                      availableTimeSlots={availableTimeSlots}
-                      date={date}
-                      timeSlot={timeSlot}
-                      checkedTimeSlot={startsAt}
-                      handleChange={handleChange}
-                    />
-                  </td>
-                ))
-              }
-            </tr>
-          )
-        }
-      </tbody>
-    </table>
-  )
-}
-
-const RadioButtonIfAvailable = ({
-  availableTimeSlots,
-  date,
-  timeSlot,
-  checkedTimeSlot,
-  handleChange
-}) => {
-  const startsAt = mergeDateAndTime(date, timeSlot)
-
-  //startsAt is the current selected value
-  const isChecked = startsAt === checkedTimeSlot
-
-  if (
-    availableTimeSlots.some(availableTimeSlot => availableTimeSlot.startsAt === startsAt)
-  ) {
-    return (
-      <input 
-        name="startsAt"
-        type="radio"
-        value={startsAt}
-        checked={isChecked}
-        onChange={handleChange}
-      />
-    )
-  }
-  return null
 }
 
 AppointmentForm.defaultProps = {
