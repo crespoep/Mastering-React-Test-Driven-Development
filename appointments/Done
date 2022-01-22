@@ -82,3 +82,8 @@ it('pre-selects the existing value', () => {
   // expect(field('service').value).toEqual('Blow-dry')
   // It seems more straightforward to me
 })
+
+TIP:
+Ver bien como funciona useCallback
+
+ME QUEDE EN: No me anda el faker que instalé

@@ -18,6 +18,7 @@
     "@babel/plugin-transform-runtime": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
+    "faker": "^4.1.0",
     "jest": "^27.4.7"
   },
   "dependencies": {
@@ -27,5 +28,5 @@
   },
   "jest": {
     "testEnvironment": "jsdom"
-    }
+  }
 }
