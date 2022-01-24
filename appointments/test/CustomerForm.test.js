@@ -14,6 +14,14 @@ describe('CustomerForm', () => {
   const field = name => form('customer').elements[name];
   const labelFor = formElement =>
     container.querySelector(`label[for="${formElement}"]`);
+    
+  const singleArgumentSpy = () => {
+    let receivedArgument;
+    return {
+      fn: arg => (receivedArgument = arg),
+      receivedArgument: () => receivedArgument
+    }
+  }
 
   it('renders a form', () => {
     render(<CustomerForm />);
@@ -61,16 +69,17 @@ describe('CustomerForm', () => {
 
   const itSubmitsExistingValue = (fieldName, value) =>
     it('saves existing value when submitted', async () => {
-      expect.hasAssertions();
+      let submitArg
+
       render(
         <CustomerForm
           {...{ [fieldName]: value }}
-          onSubmit={props =>
-            expect(props[fieldName]).toEqual(value)
+          onSubmit={customer => submitArg = customer
           }
         />
       );
-      await ReactTestUtils.Simulate.submit(form('customer'));
+      ReactTestUtils.Simulate.submit(form('customer'));
+      expect(submitArg[fieldName]).toEqual(value)
     });
 
   const itSubmitsNewValue = (fieldName, value) =>

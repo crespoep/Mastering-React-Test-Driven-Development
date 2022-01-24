@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "test": "jest",
+    "test-watch": "jest --watchAll",
     "build-server": "webpack --config webpack-server.config.js",
     "test-server": "jest --config server/jest.json",
     "serve": "node dist/server/server.js"
@@ -31,6 +32,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/server/"
