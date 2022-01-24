@@ -123,10 +123,11 @@ export const AppointmentForm = ({
   availableTimeSlots,
   startsAt,
   selectableStylists,
-  stylist
+  stylist,
+  serviceStylists
 }) => {
 
-  const [appointment, setAppointment] = useState({service, startsAt})
+  const [appointment, setAppointment] = useState({service, startsAt, stylist})
 
   const handleStartsAtChange = useCallback(({ target: { value }}) =>
       setAppointment(appointment => ({
@@ -136,13 +137,22 @@ export const AppointmentForm = ({
       []
     )
 
-  const handleChangeService = ({target}) => {
-    setAppointment((appointment) => ({
+  const handleChange = ({ target }) => {
+    setAppointment(appointment => ({
       ...appointment,
-      service: target.value
-      })
-    )
+      [target.name]: target.value 
+    }))
   }
+
+  const stylistsForService = appointment.service
+  ? serviceStylists[appointment.service]
+  : selectableStylists;
+
+  const timeSlotsForStylist = appointment.stylist
+    ? availableTimeSlots.filter(slot =>
+        slot.stylists.includes(appointment.stylist)
+      )
+    : availableTimeSlots;
 
   return (
     <form id="appointment" onSubmit={() => onSubmit(appointment)}>
@@ -151,7 +161,7 @@ export const AppointmentForm = ({
         id="service"
         name="service"
         value={service}
-        onChange={handleChangeService}
+        onChange={handleChange}
       >
         <option />
         {
@@ -164,11 +174,11 @@ export const AppointmentForm = ({
       <select 
         id="stylist"
         value={stylist}
-        readOnly
+        onChange={handleChange}
       >
         <option />
         {
-          selectableStylists.map(stylist => 
+          stylistsForService.map(stylist => 
             <option key={stylist}>{stylist}</option>
           )
         }
@@ -177,7 +187,7 @@ export const AppointmentForm = ({
         salonOpensAt={salonOpensAt}
         salonClosesAt={salonClosesAt}
         today={today}
-        availableTimeSlots={availableTimeSlots}
+        availableTimeSlots={timeSlotsForStylist}
         checkedTimeSlot={appointment.startsAt}
         handleChange={handleStartsAtChange}
       />
@@ -199,5 +209,13 @@ AppointmentForm.defaultProps = {
   salonClosesAt: 19,
   today: new Date(),
   availableTimeSlots: [],
-  selectableStylists: []
+  selectableStylists: [],
+  serviceStylists: {
+    Cut: ['Ashley', 'Jo', 'Pat', 'Sam'],
+    'Blow-dry': ['Ashley', 'Jo', 'Pat', 'Sam'],
+    'Cut & color': ['Ashley', 'Jo'],
+    'Beard trim': ['Pat', 'Sam'],
+    'Cut & beard trim': ['Pat', 'Sam'],
+    Extensions: ['Ashley', 'Pat']
+  }
 }

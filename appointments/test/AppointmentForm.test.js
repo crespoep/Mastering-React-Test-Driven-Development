@@ -173,6 +173,76 @@ describe('AppointmentForm', () => {
       expect(stylistLabel).not.toBeNull()
       expect(stylistLabel.textContent).toEqual('Stylist')
     })
+
+    it('submits existing value', () => {
+      expect.hasAssertions()
+      const selectableStylists = [
+        'John',
+        'Richard',
+        'Daniel'
+      ]
+      render(
+        <AppointmentForm 
+          selectableStylists={selectableStylists}
+          stylist={'John'}
+          onSubmit={({stylist}) => {
+            expect(stylist).toEqual('John')
+          }}
+        />
+      )
+      ReactTestUtils.Simulate.submit(form('appointment'))
+    })
+
+    it('submits new value', () => {
+      expect.hasAssertions()
+      const selectableStylists = [
+        'John',
+        'Richard',
+        'Daniel'
+      ]
+      render(
+        <AppointmentForm 
+          selectableStylists={selectableStylists}
+          stylist={'John'}
+          onSubmit={({stylist}) => {
+            expect(stylist).toEqual('Richard')
+          }}
+        />
+      )
+      ReactTestUtils.Simulate.change(field('stylist'), {
+        target: {value: 'Richard', name: 'stylist'}
+      })
+      ReactTestUtils.Simulate.submit(form('appointment'))
+    })
+
+    it('lists only stylists that can perform the selected service', () => {
+      const selectableServices = ['1', '2'];
+      const selectableStylists = ['A', 'B', 'C'];
+      const serviceStylists = {
+        '1': ['A', 'B']
+      };
+
+      render(
+        <AppointmentForm
+          selectableServices={selectableServices}
+          selectableStylists={selectableStylists}
+          serviceStylists={serviceStylists}
+        />
+      );
+
+      ReactTestUtils.Simulate.change(field('service'), {
+        target: { value: '1', name: 'service' }
+      });
+
+      const optionNodes = Array.from(field('stylist').childNodes);
+      const renderedServices = optionNodes.map(
+        node => node.textContent
+      );
+
+      expect(renderedServices).toEqual(
+        ['', 'A', 'B']
+      )
+    });
   })
 
   describe('time slot table', () => {

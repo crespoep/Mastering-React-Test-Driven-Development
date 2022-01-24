@@ -85,5 +85,3 @@ it('pre-selects the existing value', () => {
 
 TIP:
 Ver bien como funciona useCallback
-
-ME QUEDE EN: No me anda el faker que instalé
