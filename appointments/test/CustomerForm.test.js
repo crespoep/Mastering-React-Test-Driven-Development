@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTestUtils, { act } from 'react-dom/test-utils';
+import 'whatwg-fetch'
 import { createContainer } from './domManipulators';
 import { 
   fetchResponseOk,
@@ -11,17 +12,15 @@ import { CustomerForm } from '../src/CustomerForm';
 describe('CustomerForm', () => {
   let render, container;
 
-  const originalFetch = window.fetch
-  let fetchSpy
-
   beforeEach(() => {
     ({ render, container } = createContainer());
-    fetchSpy = jest.fn(() => fetchResponseOk({}))
-    window.fetch = fetchSpy
+    jest
+      .spyOn(window, 'fetch')
+      .mockReturnValue(fetchResponseOk({}))
   });
 
   afterEach(() => {
-    window.fetch = originalFetch
+    window.fetch.mockRestore()
   })
 
   const form = id => container.querySelector(`form[id="${id}"]`);
@@ -46,7 +45,7 @@ describe('CustomerForm', () => {
   async () => {
     render(<CustomerForm />);
     ReactTestUtils.Simulate.submit(form('customer'));
-    expect(fetchSpy).toHaveBeenCalledWith(
+    expect(window.fetch).toHaveBeenCalledWith(
       '/customers',
       expect.objectContaining({
         method: 'POST',
@@ -57,7 +56,7 @@ describe('CustomerForm', () => {
 
   it('notifies onSave when form is submitted', async () => {
     const customer = { id: 123 };
-    fetchSpy.mockReturnValue(fetchResponseOk(customer));
+    window.fetch.mockReturnValue(fetchResponseOk(customer));
     const saveSpy = jest.fn();
     render(<CustomerForm onSave={saveSpy} />);
     await act(async () => {
@@ -68,7 +67,7 @@ describe('CustomerForm', () => {
 
   it('does not notify onSave if the POST request returns an error',
   async () => {
-    fetchSpy.mockReturnValue(fetchResponseError());
+    window.fetch.mockReturnValue(fetchResponseError());
     const saveSpy = jest.fn();
     render(<CustomerForm onSave={saveSpy} />);
     await act(async () => {
@@ -91,7 +90,7 @@ describe('CustomerForm', () => {
   })
 
   it('renders error message when fetch call fails', async () => {
-    fetchSpy.mockReturnValue(Promise.resolve({ ok: false }))
+    window.fetch.mockReturnValue(Promise.resolve({ ok: false }))
     render(<CustomerForm />)
     await act(async () => {
       ReactTestUtils.Simulate.submit(form('customer'))
@@ -136,7 +135,7 @@ describe('CustomerForm', () => {
       it('saves existing value when submitted', async () => {
         render(<CustomerForm {...{ [fieldName]: 'value' }} />);
         ReactTestUtils.Simulate.submit(form('customer'));
-        expect(requestBodyOf(fetchSpy)).toMatchObject({
+        expect(requestBodyOf(window.fetch)).toMatchObject({
         [fieldName]: 'value'
       });
     });
@@ -150,7 +149,7 @@ describe('CustomerForm', () => {
         target: { value: 'newValue', name: fieldName }
       });
       ReactTestUtils.Simulate.submit(form('customer'));
-      expect(requestBodyOf(fetchSpy)).toMatchObject({
+      expect(requestBodyOf(window.fetch)).toMatchObject({
         [fieldName]: 'newValue'
       });
     });
