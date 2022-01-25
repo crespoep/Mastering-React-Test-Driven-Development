@@ -12,6 +12,8 @@ export const CustomerForm = ({
     phoneNumber
   });
 
+  const [error, setError] = useState(false)
+
   const handleSubmit = async e => {
     e.preventDefault()
     const result = await window.fetch('/customers', {
@@ -23,6 +25,8 @@ export const CustomerForm = ({
     if (result.ok) {
       const customerWithId = await result.json()
       onSave(customerWithId)
+    } else {
+      setError(true)
     }
   }
 
@@ -42,6 +46,7 @@ export const CustomerForm = ({
         value={firstName}
         onChange={handleChange}
       />
+      { error ? <Error /> : null }
 
       <label htmlFor="lastName">Last name</label>
       <input
@@ -65,6 +70,9 @@ export const CustomerForm = ({
     </form>
   );
 };
+
+const Error = () => <div className="error">An error occurred during save.</div>
+
 
 CustomerForm.defaultProps = {
   onSave: () => {}
