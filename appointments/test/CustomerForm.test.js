@@ -6,9 +6,18 @@ import { CustomerForm } from '../src/CustomerForm';
 describe('CustomerForm', () => {
   let render, container;
 
+  const originalFetch = window.fetch
+  let fetchSpy
+
   beforeEach(() => {
     ({ render, container } = createContainer());
+    fetchSpy = spy()
+    window.fetch = fetchSpy.fn
   });
+
+  afterEach(() => {
+    window.fetch = originalFetch
+  })
 
   const form = id => container.querySelector(`form[id="${id}"]`);
   const field = name => form('customer').elements[name];
@@ -50,7 +59,6 @@ describe('CustomerForm', () => {
   });
 
   it('calls fetch with the right properties when submitting data', async () => {
-    const fetchSpy = spy()
     render(
       <CustomerForm fetch={fetchSpy.fn} onSubmit={() => {}} />
     )
@@ -99,8 +107,6 @@ describe('CustomerForm', () => {
 
   const itSubmitsExistingValue = (fieldName, value) =>
     it('saves existing value when submitted', async () => {
-      const fetchSpy = spy();
-
       render(
         <CustomerForm
           {...{ [fieldName]: value }}
@@ -114,8 +120,6 @@ describe('CustomerForm', () => {
 
   const itSubmitsNewValue = (fieldName, value) =>
     it('saves new value when submitted', async () => {
-      const fetchSpy = spy()
-
       render(
         <CustomerForm
           {...{ [fieldName]: 'existingValue' }}

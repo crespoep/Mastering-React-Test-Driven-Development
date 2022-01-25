@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 export const CustomerForm = ({
   firstName,
   lastName,
-  phoneNumber,
-  fetch
+  phoneNumber
 }) => {
   const [customer, setCustomer] = useState({
     firstName,
@@ -13,7 +12,7 @@ export const CustomerForm = ({
   });
 
   const handleSubmit = () => {
-    fetch('/customers', {
+    window.fetch('/customers', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
@@ -60,7 +59,3 @@ export const CustomerForm = ({
     </form>
   );
 };
-
-CustomerForm.defaultProps = {
-  fetch: async () => {}
-}
