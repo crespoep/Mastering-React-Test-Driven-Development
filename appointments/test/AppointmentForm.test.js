@@ -91,36 +91,43 @@ describe('AppointmentForm', () => {
 
   const itSubmitsExistingValue = (fieldName, props) => {
     it('saves existing value when submitted', async () => {
-      expect.hasAssertions();
+      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'value' }}
-          onSubmit={props =>
-            expect(props[fieldName]).toEqual('value')
-          }
+          onSubmit={submitSpy}
         />
       );
       submit(form('appointment'));
+      expect(submitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          [fieldName]: 'value'
+        })
+      )
     });
   };
 
   const itSubmitsNewValue = (fieldName, props) => {
     it('saves new value when submitted', async () => {
-      expect.hasAssertions();
+      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'existingValue' }}
-          onSubmit={props =>
-            expect(props[fieldName]).toEqual('newValue')
-          }
+          onSubmit={submitSpy}
         />
       );
       change(field('appointment', fieldName), {
         target: { value: 'newValue', name: fieldName }
       });
       submit(form('appointment'));
+
+      expect(submitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          [fieldName]: 'newValue'}
+        )
+      )
     });
   };
 
@@ -297,34 +304,32 @@ describe('AppointmentForm', () => {
     });
 
     it('saves existing value when submitted', async () => {
-      expect.hasAssertions();
+      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          onSubmit={({ startsAt }) =>
-            expect(startsAt).toEqual(
-              availableTimeSlots[0].startsAt
-            )
-          }
+          onSubmit={submitSpy}
         />
       );
       submit(form('appointment'));
+      expect(submitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startsAt: availableTimeSlots[0].startsAt
+        })
+      )
     });
 
     it('saves new value when submitted', () => {
-      expect.hasAssertions();
+      const submitSpy = jest.fn()
+
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          onSubmit={({ startsAt }) =>
-            expect(startsAt).toEqual(
-              availableTimeSlots[1].startsAt
-            )
-          }
+          onSubmit={submitSpy}
         />
       );
       change(startsAtField(1), {
@@ -334,6 +339,11 @@ describe('AppointmentForm', () => {
         }
       });
       submit(form('appointment'));
+      expect(submitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startsAt: availableTimeSlots[1].startsAt
+        })
+      )
     });
 
     it('filters appointments by selected stylist', () => {
