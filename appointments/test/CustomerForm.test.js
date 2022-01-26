@@ -95,6 +95,15 @@ describe('CustomerForm', () => {
     expect(element('.error').textContent).toMatch('error occurred')
   })
 
+  it('clears error message when form is submitted again', async () => {
+    window.fetch.mockReturnValue(Promise.resolve({ ok: false }))
+    render(<CustomerForm />)
+    await submit(form('customer'))
+    window.fetch.mockReturnValue(fetchResponseOk({}))
+    await submit(form('customer'))
+    expect(element('.error')).toBeNull()
+  })
+
   const expectToBeInputFieldOfTypeText = formElement => {
     expect(formElement).not.toBeNull();
     expect(formElement.tagName).toEqual('INPUT');

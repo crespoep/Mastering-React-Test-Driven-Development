@@ -25,6 +25,7 @@ export const CustomerForm = ({
     if (result.ok) {
       const customerWithId = await result.json()
       onSave(customerWithId)
+      setError(false)
     } else {
       setError(true)
     }
