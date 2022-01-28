@@ -137,6 +137,15 @@ describe('AppointmentForm', () => {
 
     submit(form('appointment'))
     expect(fetchSpy.mock.calls[0][0]).toEqual('/appointments')
+    expect(fetchSpy.mock.calls[0][1]).toEqual(
+      expect.objectContaining({
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    )
   })
 
   describe('service field', () => {

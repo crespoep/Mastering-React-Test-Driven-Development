@@ -142,7 +142,13 @@ export const AppointmentForm = ({
   
   const handleSubmit = () => {
     onSubmit(appointment)
-    fetch('/appointments')
+    fetch('/appointments', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   const stylistsForService = appointment.service
