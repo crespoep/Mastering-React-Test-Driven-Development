@@ -147,7 +147,8 @@ export const AppointmentForm = ({
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(appointment)
     })
   }
 
@@ -223,5 +224,5 @@ AppointmentForm.defaultProps = {
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
   },
-  fetch: () => {}
+  fetch: async () => {}
 };

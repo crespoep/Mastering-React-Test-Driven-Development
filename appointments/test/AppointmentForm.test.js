@@ -89,21 +89,22 @@ describe('AppointmentForm', () => {
     });
   };
 
+  // estaba retocando esta
   const itSubmitsExistingValue = (fieldName, props) => {
     it('saves existing value when submitted', async () => {
+      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'value' }}
-          onSubmit={submitSpy}
+          onSubmit={() => {}}
+          fetch={fetchSpy}
         />
       );
       submit(form('appointment'));
-      expect(submitSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          [fieldName]: 'value'
-        })
-      )
+      expect(
+        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+      ).toEqual('value')
     });
   };
 
