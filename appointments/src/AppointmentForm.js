@@ -116,7 +116,8 @@ export const AppointmentForm = ({
   salonClosesAt,
   today,
   availableTimeSlots,
-  startsAt
+  startsAt,
+  fetch
 }) => {
   const [appointment, setAppointment] = useState({
     service,
@@ -138,6 +139,11 @@ export const AppointmentForm = ({
       })),
     []
   );
+  
+  const handleSubmit = () => {
+    onSubmit(appointment)
+    fetch('/appointments')
+  }
 
   const stylistsForService = appointment.service
     ? serviceStylists[appointment.service]
@@ -150,7 +156,7 @@ export const AppointmentForm = ({
     : availableTimeSlots;
 
   return (
-    <form id="appointment" onSubmit={() => onSubmit(appointment)}>
+    <form id="appointment" onSubmit={handleSubmit}>
       <label htmlFor="service">Salon service</label>
       <select
         name="service"
@@ -210,5 +216,6 @@ AppointmentForm.defaultProps = {
     'Beard trim': ['Pat', 'Sam'],
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
-  }
+  },
+  fetch: () => {}
 };

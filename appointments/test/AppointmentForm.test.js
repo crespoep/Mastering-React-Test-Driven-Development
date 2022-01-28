@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { createContainer } from './domManipulators';
 import { AppointmentForm } from '../src/AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor, submit, change;
+  let render, container, form, field, labelFor, submit, change, submitSpy;
 
   beforeEach(() => {
     ({ 
@@ -16,6 +15,7 @@ describe('AppointmentForm', () => {
       submit,
       change
     } = createContainer());
+    submitSpy = jest.fn()
   });
 
   const startsAtField = index =>
@@ -91,7 +91,6 @@ describe('AppointmentForm', () => {
 
   const itSubmitsExistingValue = (fieldName, props) => {
     it('saves existing value when submitted', async () => {
-      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
@@ -110,7 +109,6 @@ describe('AppointmentForm', () => {
 
   const itSubmitsNewValue = (fieldName, props) => {
     it('saves new value when submitted', async () => {
-      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
@@ -130,6 +128,16 @@ describe('AppointmentForm', () => {
       )
     });
   };
+
+  it('calls fetch with the right properties when submitting data', () => {
+    const fetchSpy = jest.fn()
+    render(
+      <AppointmentForm fetch={fetchSpy} onSubmit={submitSpy} />
+    )
+
+    submit(form('appointment'))
+    expect(fetchSpy.mock.calls[0][0]).toEqual('/appointments')
+  })
 
   describe('service field', () => {
     itRendersAsASelectBox('service');
@@ -304,7 +312,6 @@ describe('AppointmentForm', () => {
     });
 
     it('saves existing value when submitted', async () => {
-      const submitSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
@@ -322,8 +329,6 @@ describe('AppointmentForm', () => {
     });
 
     it('saves new value when submitted', () => {
-      const submitSpy = jest.fn()
-
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
