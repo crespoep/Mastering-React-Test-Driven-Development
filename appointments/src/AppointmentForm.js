@@ -115,8 +115,7 @@ export const AppointmentForm = ({
   salonClosesAt,
   today,
   availableTimeSlots,
-  startsAt,
-  fetch
+  startsAt
 }) => {
   const [appointment, setAppointment] = useState({
     service,
@@ -221,6 +220,5 @@ AppointmentForm.defaultProps = {
     'Beard trim': ['Pat', 'Sam'],
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
-  },
-  fetch: async () => {}
+  }
 };

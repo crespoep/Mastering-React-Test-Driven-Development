@@ -1,9 +1,10 @@
 import React from 'react';
 import { createContainer } from './domManipulators';
 import { AppointmentForm } from '../src/AppointmentForm';
+import 'whatwg-fetch'
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor, submit, change, fetchSpy;
+  let render, container, form, field, labelFor, submit, change;
 
   const originalFetch = window.fetch
  
@@ -18,8 +19,7 @@ describe('AppointmentForm', () => {
       change
     } = createContainer());
     
-    fetchSpy = jest.fn()
-    window.fetch = fetchSpy
+    window.fetch = jest.fn()
   });
 
   afterEach(() => {
@@ -108,10 +108,10 @@ describe('AppointmentForm', () => {
       );
       submit(form('appointment'));
       expect(
-        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+        JSON.parse(window.fetch.mock.calls[0][1].body)[fieldName]
       ).toEqual('value')
       expect(
-        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+        JSON.parse(window.fetch.mock.calls[0][1].body)[fieldName]
       ).toEqual('value')
     });
   };
@@ -129,7 +129,7 @@ describe('AppointmentForm', () => {
       });
       submit(form('appointment'));
       expect(
-        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+        JSON.parse(window.fetch.mock.calls[0][1].body)[fieldName]
       ).toEqual('newValue')
     });
   };
@@ -139,8 +139,8 @@ describe('AppointmentForm', () => {
       <AppointmentForm />
     )
     submit(form('appointment'))
-    expect(fetchSpy.mock.calls[0][0]).toEqual('/appointments')
-    expect(fetchSpy.mock.calls[0][1]).toEqual(
+    expect(window.fetch.mock.calls[0][0]).toEqual('/appointments')
+    expect(window.fetch.mock.calls[0][1]).toEqual(
       expect.objectContaining({
         method: 'POST',
         credentials: 'same-origin',
@@ -333,7 +333,7 @@ describe('AppointmentForm', () => {
       );
       submit(form('appointment'));
       expect(
-        JSON.parse(fetchSpy.mock.calls[0][1].body).startsAt
+        JSON.parse(window.fetch.mock.calls[0][1].body).startsAt
       ).toEqual(availableTimeSlots[0].startsAt)
     });
 
@@ -353,7 +353,7 @@ describe('AppointmentForm', () => {
       });
       submit(form('appointment'));
       expect(
-        JSON.parse(fetchSpy.mock.calls[0][1].body).startsAt
+        JSON.parse(window.fetch.mock.calls[0][1].body).startsAt
       ).toEqual(availableTimeSlots[1].startsAt)
     });
 
