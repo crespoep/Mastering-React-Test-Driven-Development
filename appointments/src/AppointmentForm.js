@@ -115,7 +115,8 @@ export const AppointmentForm = ({
   salonClosesAt,
   today,
   availableTimeSlots,
-  startsAt
+  startsAt,
+  onSave
 }) => {
   const [appointment, setAppointment] = useState({
     service,
@@ -138,8 +139,8 @@ export const AppointmentForm = ({
     []
   );
   
-  const handleSubmit = () => {
-    window.fetch('/appointments', {
+  const handleSubmit = async () => {
+    const response = await window.fetch('/appointments', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -147,6 +148,10 @@ export const AppointmentForm = ({
       },
       body: JSON.stringify(appointment)
     })
+    if (response.ok) {
+      const data = await response.json()
+      onSave(data)
+    }
   }
 
   const stylistsForService = appointment.service
@@ -220,5 +225,6 @@ AppointmentForm.defaultProps = {
     'Beard trim': ['Pat', 'Sam'],
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
-  }
+  },
+  onSave: () => {}
 };

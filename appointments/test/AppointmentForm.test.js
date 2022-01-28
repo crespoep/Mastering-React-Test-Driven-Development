@@ -2,11 +2,10 @@ import React from 'react';
 import { createContainer } from './domManipulators';
 import { AppointmentForm } from '../src/AppointmentForm';
 import 'whatwg-fetch'
+import { fetchResponseError, fetchResponseOk } from './spyHelpers';
 
 describe('AppointmentForm', () => {
   let render, container, form, field, labelFor, submit, change;
-
-  const originalFetch = window.fetch
  
   beforeEach(() => {
     ({ 
@@ -20,10 +19,11 @@ describe('AppointmentForm', () => {
     } = createContainer());
     
     window.fetch = jest.fn()
+    jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk({}))
   });
 
   afterEach(() => {
-    window.fetch = originalFetch
+    window.fetch.mockRestore()
   })
 
   const startsAtField = index =>
@@ -149,6 +149,25 @@ describe('AppointmentForm', () => {
         }
       })
     )
+  })
+
+  it('notifies onSave when form is submitted', async () => {
+    const appointment = { id: 123 }
+    const saveSpy = jest.fn()
+    window.fetch.mockReturnValue(fetchResponseOk(appointment))
+    render(<AppointmentForm onSave={saveSpy} />)
+    // in this case the await was mandatory, event though I have awaits 
+    //inside production function, the test didn't wait the prod code to execute
+    await submit(form('appointment'))
+    expect(saveSpy).toHaveBeenCalledWith(appointment)
+  })
+
+  it('does not notifies onSave when form is not submitted', async () => {
+    const saveSpy = jest.fn()
+    window.fetch.mockReturnValue(fetchResponseError)
+    render(<AppointmentForm onSave={saveSpy} />)
+    await submit(form('appointment'))
+    expect(saveSpy).not.toHaveBeenCalled()
   })
 
   describe('service field', () => {
