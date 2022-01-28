@@ -318,29 +318,29 @@ describe('AppointmentForm', () => {
     });
 
     it('saves existing value when submitted', async () => {
+      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          onSubmit={submitSpy}
+          fetch={fetchSpy}
         />
       );
       submit(form('appointment'));
-      expect(submitSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          startsAt: availableTimeSlots[0].startsAt
-        })
-      )
+      expect(
+        JSON.parse(fetchSpy.mock.calls[0][1].body).startsAt
+      ).toEqual(availableTimeSlots[0].startsAt)
     });
 
     it('saves new value when submitted', () => {
+      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          onSubmit={submitSpy}
+          fetch={fetchSpy}
         />
       );
       change(startsAtField(1), {
@@ -350,11 +350,9 @@ describe('AppointmentForm', () => {
         }
       });
       submit(form('appointment'));
-      expect(submitSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          startsAt: availableTimeSlots[1].startsAt
-        })
-      )
+      expect(
+        JSON.parse(fetchSpy.mock.calls[0][1].body).startsAt
+      ).toEqual(availableTimeSlots[1].startsAt)
     });
 
     it('filters appointments by selected stylist', () => {

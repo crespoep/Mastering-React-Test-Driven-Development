@@ -141,7 +141,6 @@ export const AppointmentForm = ({
   );
   
   const handleSubmit = () => {
-    onSubmit(appointment)
     fetch('/appointments', {
       method: 'POST',
       credentials: 'same-origin',
@@ -224,6 +223,5 @@ AppointmentForm.defaultProps = {
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
   },
-  fetch: async () => {},
-  onSubmit: () => {}
+  fetch: async () => {}
 };
