@@ -111,7 +111,6 @@ export const AppointmentForm = ({
   selectableStylists,
   stylist,
   serviceStylists,
-  onSubmit,
   salonOpensAt,
   salonClosesAt,
   today,
@@ -141,7 +140,7 @@ export const AppointmentForm = ({
   );
   
   const handleSubmit = () => {
-    fetch('/appointments', {
+    window.fetch('/appointments', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {

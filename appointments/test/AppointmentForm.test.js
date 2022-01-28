@@ -3,8 +3,10 @@ import { createContainer } from './domManipulators';
 import { AppointmentForm } from '../src/AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor, submit, change, submitSpy;
+  let render, container, form, field, labelFor, submit, change, fetchSpy;
 
+  const originalFetch = window.fetch
+ 
   beforeEach(() => {
     ({ 
       render,
@@ -15,8 +17,14 @@ describe('AppointmentForm', () => {
       submit,
       change
     } = createContainer());
-    submitSpy = jest.fn()
+    
+    fetchSpy = jest.fn()
+    window.fetch = fetchSpy
   });
+
+  afterEach(() => {
+    window.fetch = originalFetch
+  })
 
   const startsAtField = index =>
     container.querySelectorAll(`input[name="startsAt"]`)[index];
@@ -92,15 +100,16 @@ describe('AppointmentForm', () => {
   // estaba retocando esta
   const itSubmitsExistingValue = (fieldName, props) => {
     it('saves existing value when submitted', async () => {
-      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'value' }}
-          fetch={fetchSpy}
         />
       );
       submit(form('appointment'));
+      expect(
+        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+      ).toEqual('value')
       expect(
         JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
       ).toEqual('value')
@@ -109,12 +118,10 @@ describe('AppointmentForm', () => {
 
   const itSubmitsNewValue = (fieldName, props) => {
     it('saves new value when submitted', async () => {
-      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'existingValue' }}
-          fetch={fetchSpy}
         />
       );
       change(field('appointment', fieldName), {
@@ -128,9 +135,8 @@ describe('AppointmentForm', () => {
   };
 
   it('calls fetch with the right properties when submitting data', () => {
-    const fetchSpy = jest.fn()
     render(
-      <AppointmentForm fetch={fetchSpy} />
+      <AppointmentForm />
     )
     submit(form('appointment'))
     expect(fetchSpy.mock.calls[0][0]).toEqual('/appointments')
@@ -318,13 +324,11 @@ describe('AppointmentForm', () => {
     });
 
     it('saves existing value when submitted', async () => {
-      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          fetch={fetchSpy}
         />
       );
       submit(form('appointment'));
@@ -334,13 +338,11 @@ describe('AppointmentForm', () => {
     });
 
     it('saves new value when submitted', () => {
-      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           availableTimeSlots={availableTimeSlots}
           today={today}
           startsAt={availableTimeSlots[0].startsAt}
-          fetch={fetchSpy}
         />
       );
       change(startsAtField(1), {
