@@ -97,7 +97,6 @@ describe('AppointmentForm', () => {
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'value' }}
-          onSubmit={() => {}}
           fetch={fetchSpy}
         />
       );
@@ -110,32 +109,29 @@ describe('AppointmentForm', () => {
 
   const itSubmitsNewValue = (fieldName, props) => {
     it('saves new value when submitted', async () => {
+      const fetchSpy = jest.fn()
       render(
         <AppointmentForm
           {...props}
           {...{ [fieldName]: 'existingValue' }}
-          onSubmit={submitSpy}
+          fetch={fetchSpy}
         />
       );
       change(field('appointment', fieldName), {
         target: { value: 'newValue', name: fieldName }
       });
       submit(form('appointment'));
-
-      expect(submitSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          [fieldName]: 'newValue'}
-        )
-      )
+      expect(
+        JSON.parse(fetchSpy.mock.calls[0][1].body)[fieldName]
+      ).toEqual('newValue')
     });
   };
 
   it('calls fetch with the right properties when submitting data', () => {
     const fetchSpy = jest.fn()
     render(
-      <AppointmentForm fetch={fetchSpy} onSubmit={submitSpy} />
+      <AppointmentForm fetch={fetchSpy} />
     )
-
     submit(form('appointment'))
     expect(fetchSpy.mock.calls[0][0]).toEqual('/appointments')
     expect(fetchSpy.mock.calls[0][1]).toEqual(

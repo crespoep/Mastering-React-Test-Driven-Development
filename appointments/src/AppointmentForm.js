@@ -224,5 +224,6 @@ AppointmentForm.defaultProps = {
     'Cut & beard trim': ['Pat', 'Sam'],
     Extensions: ['Ashley', 'Pat']
   },
-  fetch: async () => {}
+  fetch: async () => {},
+  onSubmit: () => {}
 };
