@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "test": "jest",
+    "test-watch": "jest --watchAll",
     "build-server": "webpack --config webpack-server.config.js",
     "test-server": "jest --config server/jest.json",
     "serve": "node dist/server/server.js"
@@ -34,7 +35,8 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/server/"
-    ]
+    ],
+    "testEnvironment": "jsdom"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
